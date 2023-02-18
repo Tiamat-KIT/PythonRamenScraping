@@ -2,8 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 data_list = [["店名","住所","電話番号"]]
-
-""" for i in range(10):
+storename_list = []
+for i in range(10):
   url = "https://ramendb.supleks.jp/search?page="+ str(i) +"&state=ishikawa&city=%E9%87%8E%E3%80%85%E5%B8%82%E5%B8%82&station-id=0"
   csv_path = "test.csv"
   r = requests.get(url)
@@ -25,9 +25,12 @@ data_list = [["店名","住所","電話番号"]]
             i += 1
             if i == 3:
                 data_list.append(store_list)
+                storename_list.append(store_list[0])
                 i = 0
-                store_list = [] """
-
+                store_list = []
+with open(csv_path, 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerows(data_list)
 
 url = "https://ramendb.supleks.jp/search?q=&state=ishikawa&city=%E9%87%91%E6%B2%A2%E5%B8%82&order=point&station-id=&type="
 csv_path = "test2.csv"
@@ -35,6 +38,7 @@ r = requests.get(url)
 soup = BeautifulSoup(r.content,"html.parser")
 before_data = ""
 store_list = []
+# storename_list = []
 i = 0
 for el in  soup.find_all("h4"):
   if before_data == el.text:
@@ -50,9 +54,10 @@ for el in  soup.find_all("h4"):
           i += 1
           if i == 3:
               data_list.append(store_list)
+              storename_list.append(store_list[0])
               i = 0
               store_list = []
-
+print(storename_list)
 with open(csv_path, 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(data_list)
